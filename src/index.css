@@ -16,12 +16,12 @@
   --popover-foreground: oklch(0.145 0 0);
   --primary: oklch(0.488 0.243 264.376);
   --primary-foreground: oklch(0.97 0.014 254.604);
-  --secondary: oklch(0.967 0.001 286.375);
-  --secondary-foreground: oklch(0.21 0.006 285.885);
+  --secondary: oklch(0.94 0.04 290);
+  --secondary-foreground: oklch(0.22 0.07 290);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --accent: oklch(0.88 0.12 310);
+  --accent-foreground: oklch(0.18 0.06 310);
   --destructive: oklch(0.58 0.22 27);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
@@ -51,12 +51,12 @@
   --popover-foreground: oklch(0.985 0 0);
   --primary: oklch(0.42 0.18 266);
   --primary-foreground: oklch(0.97 0.014 254.604);
-  --secondary: oklch(0.274 0.006 286.033);
-  --secondary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.26 0.04 290);
+  --secondary-foreground: oklch(0.95 0 0);
   --muted: oklch(0.269 0 0);
   --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.371 0 0);
-  --accent-foreground: oklch(0.985 0 0);
+  --accent: oklch(0.35 0.12 310);
+  --accent-foreground: oklch(0.97 0 0);
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
@@ -116,6 +116,66 @@
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
+}
+
+@keyframes path-flow {
+  0%   { opacity: 0; }
+  3%   { opacity: 0.45; }
+  6%   { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+/* Sonar ping that radiates from the start cell */
+@keyframes maze-ring-pulse {
+  0%   { transform: scale(1);   opacity: 0.75; }
+  100% { transform: scale(2.2); opacity: 0;    }
+}
+
+/* --- Maze cell entrance animations --- */
+
+/* Shared keyframe for visited + frontier — identical properties on both classes
+   prevent the browser from restarting the animation when a cell transitions
+   from 'frontier' to 'visited', eliminating the opacity:0 flash. */
+@keyframes maze-cell-enter {
+  from { transform: scale(0.08); opacity: 0; }
+  to   { transform: scale(1);    opacity: 1; }
+}
+@keyframes maze-path-in {
+  from { transform: scale(0); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+@keyframes maze-marker-in {
+  from { transform: scale(0); }
+  to   { transform: scale(1); }
+}
+@keyframes maze-beacon-in {
+  from { transform: scale(0); }
+  to   { transform: scale(1); }
+}
+@keyframes maze-target-in {
+  from { transform: scale(0) rotate(-25deg); }
+  to   { transform: scale(1) rotate(0deg);   }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* visited and frontier MUST share the exact same animation value so the browser
+     doesn't restart when a cell transitions between the two states. */
+  .maze-anim-visited,
+  .maze-anim-frontier { animation: maze-cell-enter 260ms cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+
+  /* Path circle only — the outer cell div is NOT animated on path reveal to avoid
+     re-flashing cells that were already visible as visited/frontier. */
+  .maze-anim-circle   { animation: maze-path-in    300ms cubic-bezier(0.34, 1.50, 0.64, 1) both; }
+  .maze-anim-marker   { animation: maze-marker-in  320ms cubic-bezier(0.34, 1.40, 0.64, 1) both; }
+  .maze-anim-beacon   { animation: maze-beacon-in  280ms cubic-bezier(0.34, 1.56, 0.64, 1) 80ms both; }
+  .maze-anim-target   { animation: maze-target-in  300ms cubic-bezier(0.34, 1.40, 0.64, 1) both; }
+
+  /* Delayed so the ping starts after the spring entrance animation (~320 ms) */
+  .maze-start-pulse   { animation: maze-ring-pulse 2s 0.45s ease-out infinite; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .maze-flow-wave { display: none; }
 }
 
 @layer base {
