@@ -76,7 +76,7 @@ export function MazeControls({
                 <span
                   className={cn(
                     "text-sm font-semibold leading-none",
-                    isSelected ? "text-primary" : "text-foreground",
+                    // isSelected ? "text-primary" : "text-foreground",
                   )}
                 >
                   {solver.name}
