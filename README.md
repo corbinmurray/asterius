@@ -1,26 +1,14 @@
-# Asterius — Pathfinding, Visualized
+# Asterius
 
-**Asterius** is an interactive maze pathfinding visualizer built with **React 19**, **TypeScript**, and **Tailwind CSS v4**. It generates random mazes and animates classic graph-search algorithms solving them — step by step — so you can see exactly how each strategy explores.
+Asterius is an interactive maze pathfinding visualizer. It generates a random maze and lets you watch classic algorithms find a path through it, one step at a time. Swap algorithms, adjust speed, and regenerate the maze to see how each strategy explores differently.
 
-🔗 **[Live Demo](https://corbinmurray.github.io/asterius/)**
-
----
-
-## ✨ Features
-
-- **Three pathfinding algorithms** — A*, BFS, and DFS — each with distinct exploration behaviors
-- **Wilson's Algorithm** maze generation for provably uniform, perfect mazes
-- **Step-by-step animation** with adjustable speed (1× to 10×)
-- **Visual cell states** — unvisited, frontier, visited, and a gradient-colored solution path
-- **Responsive layout** — sidebar controls on desktop, a bottom-sheet on mobile
-- **Keyboard shortcut** — spacebar to toggle play/pause
-- **Accessible** — ARIA labels, live regions for screen-reader announcements
+**[Live Demo](https://corbinmurray.github.io/asterius/)**
 
 ---
 
-## 🚀 Tech Stack
+## Tech Stack
 
-| Layer | Technology |
+| | |
 |---|---|
 | Framework | [React 19](https://react.dev/) |
 | Language | [TypeScript](https://www.typescriptlang.org/) |
@@ -32,36 +20,34 @@
 
 ---
 
-## 🧠 Algorithms
+## Algorithms
 
-### Maze Generation — Wilson's Algorithm
-Produces a **uniformly random spanning tree** via a loop-erased random walk. Every possible perfect maze is equally likely, and the result is always fully connected and solvable.
+Mazes are generated using [Wilson's Algorithm](https://en.wikipedia.org/wiki/Maze_generation_algorithm#Wilson's_algorithm), which produces a uniformly random spanning tree via a loop-erased random walk. Every maze is guaranteed to be solvable with a unique path between any two cells.
 
-### Solvers
+The following pathfinding algorithms are currently supported:
 
-| Algorithm | Strategy | Optimal Path? |
+| Algorithm | Strategy | Shortest Path |
 |---|---|---|
-| **A*** | Manhattan-distance heuristic guides search toward the goal | ✅ Yes |
-| **BFS** | Level-by-level exploration guarantees fewest steps | ✅ Yes |
-| **DFS** | Depth-first stack dives deep before backtracking — dramatic, not optimal | ❌ No |
+| A* | Uses Manhattan distance as a heuristic to guide the search toward the goal | Yes |
+| BFS | Explores neighbors level by level | Yes |
+| DFS | Explores as deep as possible before backtracking | No |
 
 ---
 
-## 🏗️ Architecture Highlights
+## Under the Hood
 
-- **RAF-based animation engine** — a custom `useAnimationEngine` hook drives step playback via `requestAnimationFrame`, with configurable intervals and frame-debt tracking to prevent burst animations after tab focus is restored.
-- **Pre-computed solver steps** — solvers run synchronously up-front and emit an ordered array of steps. The animation engine replays those steps, cleanly separating algorithm logic from rendering.
-- **Map-based cell state** — a `Map<string, CellState>` provides O(1) lookups across 441 cells without array scanning, keeping frame-to-frame updates fast.
-- **Granular memoization** — `MazeCell` uses a custom memo comparator so only cells whose state actually changed re-render each animation frame.
-- **CSS containment** — the grid sets `contain: layout style` to limit browser paint scope during high-frequency updates.
+A few things worth noting for anyone reading the source:
+
+- Solvers run up-front and produce an ordered list of steps. The animation engine replays those steps independently, so algorithm logic and rendering stay separate.
+- Cell state is tracked in a `Map<string, CellState>`, which keeps per-frame lookups fast as the grid scales.
+- `MazeCell` uses a custom memo comparator so only cells whose state changed actually re-render during playback.
+- The animation engine uses `requestAnimationFrame` with frame-debt tracking to handle cases like tab switching without causing burst updates.
 
 ---
 
-## 📦 Getting Started
+## Getting Started
 
-### Prerequisites
-
-This project consumes a private UI library (`@corbinmurray/ui-components`) published to GitHub Packages. You will need a [GitHub Personal Access Token (PAT)](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) with `read:packages` scope.
+This project depends on a private UI library (`@corbinmurray/ui-components`) published to GitHub Packages. You'll need a [GitHub Personal Access Token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) with `read:packages` scope before installing.
 
 1. Add the scoped registry to your local `.npmrc`:
 
@@ -70,30 +56,23 @@ This project consumes a private UI library (`@corbinmurray/ui-components`) publi
    //npm.pkg.github.com/:_authToken=YOUR_PAT_HERE
    ```
 
-2. Install dependencies:
+2. Install and run:
 
    ```bash
    npm install
+   npm run dev
    ```
 
-### Development
+Other scripts:
 
 ```bash
-# Start the dev server (http://localhost:5173)
-npm run dev
-
-# Type-check & build for production
-npm run build
-
-# Preview the production build locally
-npm run preview
-
-# Lint
-npm run lint
+npm run build    # type-check and build for production
+npm run preview  # preview the production build locally
+npm run lint     # lint
 ```
 
 ---
 
-## 📄 License
+## License
 
 MIT © [Corbin Murray](https://github.com/corbinmurray)
