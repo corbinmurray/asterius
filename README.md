@@ -2,7 +2,7 @@
 
 Asterius is an interactive maze pathfinding visualizer. It generates a random maze and lets you watch classic algorithms find a path through it, one step at a time. Swap algorithms, adjust speed, and regenerate the maze to see how each strategy explores differently.
 
-**[Live Demo](https://corbinmurray.github.io/asterius/)**
+**[Live Demo](https://asterius.corbinmurray.dev)**
 
 ---
 
