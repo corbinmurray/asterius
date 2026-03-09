@@ -1,55 +1,78 @@
-# corbinmurray.dev
+# Asterius
 
-A high-performance personal portfolio and engineering showcase built with **React 19**, **Tailwind CSS v4**, and **Motion**.
+Asterius is an interactive maze pathfinding visualizer. It generates a random maze and lets you watch classic algorithms find a path through it, one step at a time. Swap algorithms, adjust speed, and regenerate the maze to see how each strategy explores differently.
 
-This project serves as a living document of my technical expertise and architectural philosophy. It prioritizes clean code, responsive design, and a "soft-surface" aesthetic designed for high readability.
+**[Live Demo](https://asterius.corbinmurray.dev)**
 
-## 🚀 Tech Stack
+---
 
-- **Framework**: [React 19](https://react.dev/)
-- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/) (utilizing high-performance `@theme` blocks)
-- **Animations**: [Motion](https://www.framer.com/motion/) (orchestrated stagger reveals and layout transitions)
-- **Icons**: [Lucide React](https://lucide.dev/)
-- **UI Architecture**: custom component library consumed from a private GitHub Packages registry.
-- **Build Tool**: [Vite](https://vitejs.dev/)
+## Tech Stack
 
-## 🛠️ Performance & Architecture
+| | |
+|---|---|
+| Framework | [React 19](https://react.dev/) |
+| Language | [TypeScript](https://www.typescriptlang.org/) |
+| Styling | [Tailwind CSS v4](https://tailwindcss.com/) |
+| Animations | [Motion](https://motion.dev/) |
+| Icons | [Lucide React](https://lucide.dev/) |
+| UI Components | `@corbinmurray/ui-components` (private GitHub Packages) |
+| Build Tool | [Vite](https://vitejs.dev/) |
 
-- **Lazy-Loaded Sections**: Below-the-fold content is streamed via `Suspense` and `React.lazy` to maintain a sub-second "Lighthouse Perfect" initial load.
-- **Hash-Routing Resilience**: Custom React hooks handle the transition between lazy-loaded boundaries to ensure that deep links (e.g., `/#contact`) remain accurate even during network streaming.
-- **Data-Driven UI**: Sections like Projects and Experience are driven by local data arrays, making the portfolio trivially extensible without the overhead of an external CMS.
+---
 
-## 📦 Getting Started
+## Algorithms
 
-### Prerequisites
+Mazes are generated using [Wilson's Algorithm](https://en.wikipedia.org/wiki/Maze_generation_algorithm#Wilson's_algorithm), which produces a uniformly random spanning tree via a loop-erased random walk. Every maze is guaranteed to be solvable with a unique path between any two cells.
 
-This project consumes a private UI library (`@corbinmurray/ui-components`). You will need a GitHub Personal Access Token (PAT) with `read:packages` permissions.
+The following pathfinding algorithms are currently supported:
 
-1. Create a local `.npmrc` file:
+| Algorithm | Strategy | Shortest Path |
+|---|---|---|
+| A* | Uses Manhattan distance as a heuristic to guide the search toward the goal | Yes |
+| BFS | Explores neighbors level by level | Yes |
+| DFS | Explores as deep as possible before backtracking | No |
 
-   ```bash
+---
+
+## Under the Hood
+
+A few things worth noting for anyone reading the source:
+
+- Solvers run up-front and produce an ordered list of steps. The animation engine replays those steps independently, so algorithm logic and rendering stay separate.
+- Cell state is tracked in a `Map<string, CellState>`, which keeps per-frame lookups fast as the grid scales.
+- `MazeCell` uses a custom memo comparator so only cells whose state changed actually re-render during playback.
+- The animation engine uses `requestAnimationFrame` with frame-debt tracking to handle cases like tab switching without causing burst updates.
+
+---
+
+## Getting Started
+
+This project depends on a private UI library (`@corbinmurray/ui-components`) published to GitHub Packages. You'll need a [GitHub Personal Access Token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) with `read:packages` scope before installing.
+
+1. Add the scoped registry to your local `.npmrc`:
+
+   ```
    @corbinmurray:registry=https://npm.pkg.github.com/
+   //npm.pkg.github.com/:_authToken=YOUR_PAT_HERE
    ```
 
-2. Authenticate with GitHub:
+2. Install and run:
 
    ```bash
-   npm login --registry=https://npm.pkg.github.com/
+   npm install
+   npm run dev
    ```
 
-### Installation
+Other scripts:
 
 ```bash
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-
-# Build for production
-npm run build
+npm run build    # type-check and build for production
+npm run preview  # preview the production build locally
+npm run lint     # lint
 ```
 
-## 📄 License
+---
+
+## License
 
 MIT © [Corbin Murray](https://github.com/corbinmurray)
