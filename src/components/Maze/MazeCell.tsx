@@ -5,8 +5,8 @@ import type { Cell, CellState } from "./types";
 
 const STATE_BG: Record<CellState, string> = {
   unvisited: "bg-background",
-  visited:   "bg-primary/15",
-  frontier:  "bg-primary/65",
+  visited:   "bg-primary/30",
+  frontier:  "bg-primary/80",
   path:      "bg-primary",
   start:     "bg-accent",
   end:       "bg-destructive",
