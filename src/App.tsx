@@ -9,7 +9,7 @@ export function App() {
   return (
     <AppLayout
       header={<Header appName={appName} />}
-      footer={<Footer appName={appName} />}
+      footer={<Footer appName={appName} className="md:pb-20" />}
     >
       <div className="py-4 sm:py-6 lg:py-8">
         <section
