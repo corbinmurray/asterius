@@ -75,6 +75,8 @@ export function MobileControlsBar({
     };
   }, [isSheetOpen]);
 
+
+
   return (
     <>
       {/* Backdrop */}
@@ -244,7 +246,7 @@ export function MobileControlsBar({
 
       {/* Fixed bottom action bar */}
       <div
-        className="fixed bottom-0 inset-x-0 z-30 xl:hidden"
+        className="sticky bottom-0 inset-x-0 z-30 xl:hidden"
         style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       >
         <div className="bg-background/95 backdrop-blur-md border-t border-border">
